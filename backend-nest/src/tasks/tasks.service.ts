@@ -1,3 +1,4 @@
+import { UpdateTaskDto } from './dto/update-task.dto';
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { EnumTaskStatus, ITask } from './tasks.model';
 import { tasksDatabase } from './tasks.database';
@@ -39,6 +40,25 @@ export class TasksService {
 
     this.tasks.push(task);
     return task;
+  }
+
+  updateTask(id: string, updateTaskDto: UpdateTaskDto): ITask {
+    const foundTask = this.tasks.find((t: ITask) => t.id === id);
+
+    if (!foundTask) {
+      throw new NotFoundException(`Task with ID ${id} not found`);
+    }
+
+    foundTask.updatedAt = new Date();
+
+    foundTask.title = updateTaskDto.title ?? foundTask.title;
+    foundTask.description = updateTaskDto.description ?? foundTask.description;
+    foundTask.category = updateTaskDto.category ?? foundTask.category;
+    foundTask.priority = updateTaskDto.priority ?? foundTask.priority;
+    foundTask.status = updateTaskDto.status ?? foundTask.status;
+    foundTask.isBlocked = updateTaskDto.isBlocked ?? foundTask.isBlocked;
+
+    return foundTask;
   }
 
   deleteTask(id: string): void {
