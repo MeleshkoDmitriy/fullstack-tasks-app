@@ -17,6 +17,7 @@ export interface ITask {
   category: string;
   priority: EnumTaskPriority;
   status: EnumTaskStatus;
+  isBlocked: boolean;
   createdAt: Date;
   updatedAt: Date;
 }

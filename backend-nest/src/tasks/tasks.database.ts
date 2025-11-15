@@ -11,6 +11,7 @@ export const tasksDatabase: ITask[] = [
     status: EnumTaskStatus.IN_PROGRESS,
     createdAt: new Date('2025-11-10T10:00:00Z'),
     updatedAt: new Date('2025-11-11T14:30:00Z'),
+    isBlocked: false,
   },
   {
     id: 'a1b2c3d4-2222-4222-a222-a1b2c3d4e5f2',
@@ -22,6 +23,7 @@ export const tasksDatabase: ITask[] = [
     status: EnumTaskStatus.TODO,
     createdAt: new Date('2025-11-11T11:00:00Z'),
     updatedAt: new Date('2025-11-11T11:00:00Z'),
+    isBlocked: false,
   },
   {
     id: 'a1b2c3d4-3333-4333-a333-a1b2c3d4e5f3',
@@ -33,6 +35,7 @@ export const tasksDatabase: ITask[] = [
     status: EnumTaskStatus.DONE,
     createdAt: new Date('2025-11-09T15:00:00Z'),
     updatedAt: new Date('2025-11-10T09:15:00Z'),
+    isBlocked: true,
   },
   {
     id: 'a1b2c3d4-4444-4444-a444-a1b2c3d4e5f4',
@@ -43,6 +46,7 @@ export const tasksDatabase: ITask[] = [
     status: EnumTaskStatus.DONE,
     createdAt: new Date('2025-11-10T17:00:00Z'),
     updatedAt: new Date('2025-11-10T18:00:00Z'),
+    isBlocked: false,
   },
   {
     id: 'a1b2c3d4-5555-4555-a555-a1b2c3d4e5f5',
@@ -53,6 +57,7 @@ export const tasksDatabase: ITask[] = [
     status: EnumTaskStatus.TODO,
     createdAt: new Date('2025-11-12T08:30:00Z'),
     updatedAt: new Date('2025-11-12T08:30:00Z'),
+    isBlocked: false,
   },
   {
     id: 'a1b2c3d4-6666-4666-a666-a1b2c3d4e5f6',
@@ -63,6 +68,7 @@ export const tasksDatabase: ITask[] = [
     status: EnumTaskStatus.TODO,
     createdAt: new Date('2025-11-12T09:00:00Z'),
     updatedAt: new Date('2025-11-12T09:00:00Z'),
+    isBlocked: true,
   },
   {
     id: 'a1b2c3d4-7777-4777-a777-a1b2c3d4e5f7',
@@ -73,5 +79,6 @@ export const tasksDatabase: ITask[] = [
     status: EnumTaskStatus.IN_PROGRESS,
     createdAt: new Date('2025-11-11T16:00:00Z'),
     updatedAt: new Date('2025-11-11T16:00:00Z'),
+    isBlocked: false,
   },
 ];
