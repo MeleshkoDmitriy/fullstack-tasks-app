@@ -1,10 +1,10 @@
-export const enum EnumTaskStatus {
+export enum EnumTaskStatus {
   TODO = 'to-do',
   IN_PROGRESS = 'in-progress',
   DONE = 'done',
 }
 
-export const enum EnumTaskPriority {
+export enum EnumTaskPriority {
   LOW = 'low',
   MEDIUM = 'medium',
   HIGH = 'high',
