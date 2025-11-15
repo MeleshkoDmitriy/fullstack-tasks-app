@@ -1,19 +1,43 @@
-import { UpdateTaskDto } from './dto/update-task.dto';
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { EnumTaskStatus, ITask } from './tasks.model';
 import { tasksDatabase } from './tasks.database';
-import { CreateTaskDto } from './dto/create-task.dto';
 import { v4 as uuid } from 'uuid';
+import { GetTasksFilterDto, CreateTaskDto, UpdateTaskDto } from './dto';
 
 @Injectable()
 export class TasksService {
   private tasks: ITask[] = [...tasksDatabase];
 
-  findAllTasks(): ITask[] {
-    return this.tasks;
+  findAllTasks(filterDto: GetTasksFilterDto): ITask[] {
+    let tasks = this.tasks;
+
+    if (filterDto.isBlocked !== undefined) {
+      tasks = tasks.filter((t) => t.isBlocked === filterDto.isBlocked);
+    }
+
+    if (filterDto.priority) {
+      tasks = tasks.filter((t) => t.priority === filterDto.priority);
+    }
+
+    if (filterDto.status) {
+      tasks = tasks.filter((t) => t.status === filterDto.status);
+    }
+
+    if (filterDto.search) {
+      const lowerCaseSearchString = filterDto.search.toLowerCase();
+
+      tasks = tasks.filter(
+        (t) =>
+          t.title.toLowerCase().includes(lowerCaseSearchString) ||
+          t.description.toLowerCase().includes(lowerCaseSearchString) ||
+          t.category.toLowerCase().includes(lowerCaseSearchString),
+      );
+    }
+
+    return tasks;
   }
 
-  findOne(id: string): ITask {
+  findOneTask(id: string): ITask {
     const foundTask = this.tasks.find((task: ITask) => task.id === id);
 
     if (!foundTask) {
