@@ -1,8 +1,39 @@
 import { NestFactory } from '@nestjs/core';
+import { ValidationPipe } from '@nestjs/common';
 import { AppModule } from './app.module';
+import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+import { LoggingInterceptor } from './common';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
-  await app.listen(process.env.PORT ?? 3000);
+  app.enableCors();
+
+  app.setGlobalPrefix('api/v1');
+
+  app.useGlobalInterceptors(new LoggingInterceptor());
+
+  app.useGlobalPipes(
+    new ValidationPipe({
+      whitelist: true,
+      forbidNonWhitelisted: true,
+      transform: true,
+    }),
+  );
+
+  const config = new DocumentBuilder()
+    .setTitle('Tasks API')
+    .setDescription('API')
+    .setVersion('1.0')
+    .addServer('/api/v1', 'API v1')
+    .build();
+  const document = SwaggerModule.createDocument(app, config);
+  SwaggerModule.setup('docs', app, document);
+
+  await app.listen(process.env.PORT ?? 4200);
+
+  console.log(`Application is running on: ${await app.getUrl()}`);
+  console.log(`API endpoints: ${await app.getUrl()}/api/v1`);
+  console.log(`Swagger UI is running on: ${await app.getUrl()}/docs`);
 }
-bootstrap();
+
+void bootstrap();

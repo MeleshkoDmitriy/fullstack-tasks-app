@@ -29,6 +29,9 @@ export default tseslint.config(
       '@typescript-eslint/no-explicit-any': 'off',
       '@typescript-eslint/no-floating-promises': 'warn',
       '@typescript-eslint/no-unsafe-argument': 'warn',
+      '@typescript-eslint/no-unsafe-call': 'off', // Отключаем для декораторов class-validator
+      '@typescript-eslint/no-unsafe-member-access': 'off', // Отключаем для DTO с декораторами при реэкспорте
+      '@typescript-eslint/no-unsafe-assignment': 'off', // Отключаем для DTO с декораторами при реэкспорте
       "prettier/prettier": ["error", { endOfLine: "auto" }],
     },
   },
