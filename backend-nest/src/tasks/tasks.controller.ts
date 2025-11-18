@@ -41,7 +41,7 @@ export class TasksController {
   @ApiOperation({
     summary: 'Get all tasks',
     description:
-      'Retrieve all tasks with optional filtering by status, priority, blocked status, and search query',
+      'Retrieve all tasks with optional filtering by status, priority, tags, blocked status, and search query',
   })
   @ApiQuery({
     name: 'status',
@@ -52,6 +52,13 @@ export class TasksController {
     name: 'priority',
     required: false,
     enum: ['low', 'medium', 'high'],
+  })
+  @ApiQuery({
+    name: 'tags',
+    required: false,
+    type: String,
+    description: 'Comma-separated tags (e.g., work,education)',
+    example: 'work,education',
   })
   @ApiQuery({ name: 'isBlocked', required: false, type: Boolean })
   @ApiQuery({ name: 'search', required: false, type: String })
@@ -101,7 +108,7 @@ export class TasksController {
   @ApiOperation({
     summary: 'Create a new task',
     description:
-      'Create a new task with title, description, category, and priority',
+      'Create a new task with title, description, tags, and priority',
   })
   @ApiBody({ type: CreateTaskDto })
   @ApiResponse({
@@ -119,6 +126,34 @@ export class TasksController {
   })
   postTask(@Body() createTaskDto: CreateTaskDto): ITask {
     return this.tasksService.createTask(createTaskDto);
+  }
+
+  @Patch('/:id/toggle-blocked')
+  @ApiOperation({
+    summary: 'Toggle task blocked status',
+    description:
+      'Toggle the blocked status of a task by ID. No request body required.',
+  })
+  @ApiParam({
+    name: 'id',
+    description: 'Task unique identifier',
+    example: '123e4567-e89b-12d3-a456-426614174000',
+  })
+  @ApiResponse({
+    status: HttpStatus.OK,
+    description: 'Task blocked status toggled successfully',
+    type: TaskResponseDto,
+  })
+  @ApiResponse({
+    status: HttpStatus.NOT_FOUND,
+    description: 'Task not found',
+  })
+  @ApiResponse({
+    status: HttpStatus.UNAUTHORIZED,
+    description: 'Unauthorized',
+  })
+  toggleTaskById(@Param('id') id: string): ITask {
+    return this.tasksService.toggleTaskBlocked(id);
   }
 
   @Patch('/:id')

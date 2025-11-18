@@ -1,8 +1,14 @@
 import { PartialType } from '@nestjs/mapped-types';
-import { IsBoolean, IsEnum, IsOptional, IsString } from 'class-validator';
+import {
+  IsArray,
+  IsBoolean,
+  IsEnum,
+  IsOptional,
+  IsString,
+} from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 import { CreateTaskDto } from './create-task.dto';
-import { EnumTaskStatus, EnumTaskPriority } from '../tasks.model';
+import { EnumTaskStatus, EnumTaskPriority, EnumTaskTag } from '../tasks.model';
 
 export class UpdateTaskDto extends PartialType(CreateTaskDto) {
   @ApiProperty({
@@ -27,14 +33,16 @@ export class UpdateTaskDto extends PartialType(CreateTaskDto) {
   description?: string;
 
   @ApiProperty({
-    description: 'Task category',
-    example: 'Development',
-    type: String,
+    description: 'Task tags (array of tags)',
+    enum: EnumTaskTag,
+    example: [EnumTaskTag.WORK, EnumTaskTag.EDUCATION],
+    isArray: true,
     required: false,
   })
-  @IsString()
+  @IsArray()
   @IsOptional()
-  category?: string;
+  @IsEnum(EnumTaskTag as unknown as object, { each: true })
+  tags?: EnumTaskTag[];
 
   @ApiProperty({
     description: 'Task priority level',

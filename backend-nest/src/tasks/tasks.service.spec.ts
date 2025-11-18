@@ -1,7 +1,12 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { NotFoundException } from '@nestjs/common';
 import { TasksService } from './tasks.service';
-import { EnumTaskPriority, EnumTaskStatus, ITask } from './tasks.model';
+import {
+  EnumTaskPriority,
+  EnumTaskStatus,
+  EnumTaskTag,
+  ITask,
+} from './tasks.model';
 import { CreateTaskDto, UpdateTaskDto, GetTasksFilterDto } from './dto';
 
 describe('TasksService', () => {
@@ -11,7 +16,7 @@ describe('TasksService', () => {
       id: '1',
       title: 'Test Task 1',
       description: 'Description 1',
-      category: 'Backend',
+      tags: [EnumTaskTag.WORK, EnumTaskTag.EDUCATION],
       priority: EnumTaskPriority.HIGH,
       status: EnumTaskStatus.TODO,
       isBlocked: false,
@@ -22,7 +27,7 @@ describe('TasksService', () => {
       id: '2',
       title: 'Test Task 2',
       description: 'Description 2',
-      category: 'Frontend',
+      tags: [EnumTaskTag.WORK],
       priority: EnumTaskPriority.MEDIUM,
       status: EnumTaskStatus.IN_PROGRESS,
       isBlocked: true,
@@ -33,7 +38,7 @@ describe('TasksService', () => {
       id: '3',
       title: 'Test Task 3',
       description: 'Another description',
-      category: 'Backend',
+      tags: [EnumTaskTag.HOME, EnumTaskTag.PERSONAL],
       priority: EnumTaskPriority.LOW,
       status: EnumTaskStatus.DONE,
       isBlocked: false,
@@ -48,7 +53,12 @@ describe('TasksService', () => {
     }).compile();
 
     service = module.get<TasksService>(TasksService);
-    (service as any).tasks = [...mockTasks];
+    (service as any).tasks = mockTasks.map((task) => ({
+      ...task,
+      tags: [...task.tags],
+      createdAt: new Date(task.createdAt),
+      updatedAt: new Date(task.updatedAt),
+    }));
   });
 
   it('should be defined', () => {
@@ -117,12 +127,40 @@ describe('TasksService', () => {
       expect(result[0].description).toContain('Another');
     });
 
-    it('should filter tasks by search string in category', () => {
-      const filterDto: GetTasksFilterDto = { search: 'Frontend' };
+    it('should filter tasks by search string in tags', () => {
+      const filterDto: GetTasksFilterDto = { search: 'work' };
       const result = service.findAllTasks(filterDto);
 
-      expect(result).toHaveLength(1);
-      expect(result[0].category).toBe('Frontend');
+      expect(result.length).toBeGreaterThan(0);
+      expect(
+        result.some((t) => t.tags.some((tag) => String(tag).includes('work'))),
+      ).toBe(true);
+    });
+
+    it('should filter tasks by tags', () => {
+      const filterDto: GetTasksFilterDto = {
+        tags: [EnumTaskTag.WORK],
+      };
+      const result = service.findAllTasks(filterDto);
+
+      expect(result.length).toBeGreaterThan(0);
+      expect(result.every((t) => t.tags.includes(EnumTaskTag.WORK))).toBe(true);
+    });
+
+    it('should filter tasks by multiple tags (OR logic)', () => {
+      const filterDto: GetTasksFilterDto = {
+        tags: [EnumTaskTag.WORK, EnumTaskTag.HOME],
+      };
+      const result = service.findAllTasks(filterDto);
+
+      expect(result.length).toBeGreaterThan(0);
+      expect(
+        result.every((t) =>
+          t.tags.some((tag) =>
+            [EnumTaskTag.WORK, EnumTaskTag.HOME].includes(tag),
+          ),
+        ),
+      ).toBe(true);
     });
 
     it('should apply multiple filters', () => {
@@ -172,7 +210,7 @@ describe('TasksService', () => {
       const createTaskDto: CreateTaskDto = {
         title: 'New Task',
         description: 'New Description',
-        category: 'Testing',
+        tags: [EnumTaskTag.WORK],
         priority: EnumTaskPriority.MEDIUM,
       };
 
@@ -182,7 +220,7 @@ describe('TasksService', () => {
       expect(result.id).toBeDefined();
       expect(result.title).toBe(createTaskDto.title);
       expect(result.description).toBe(createTaskDto.description);
-      expect(result.category).toBe(createTaskDto.category);
+      expect(result.tags).toEqual(createTaskDto.tags);
       expect(result.priority).toBe(createTaskDto.priority);
       expect(result.status).toBe(EnumTaskStatus.TODO);
       expect(result.isBlocked).toBe(false);
@@ -190,12 +228,41 @@ describe('TasksService', () => {
       expect(result.updatedAt).toBeInstanceOf(Date);
     });
 
+    it('should create task with empty tags array', () => {
+      const createTaskDto: CreateTaskDto = {
+        title: 'New Task',
+        description: 'New Description',
+        tags: [],
+        priority: EnumTaskPriority.LOW,
+      };
+
+      const result = service.createTask(createTaskDto);
+
+      expect(result.tags).toEqual([]);
+    });
+
+    it('should create task with multiple tags', () => {
+      const createTaskDto: CreateTaskDto = {
+        title: 'New Task',
+        description: 'New Description',
+        tags: [EnumTaskTag.WORK, EnumTaskTag.EDUCATION, EnumTaskTag.HOME],
+        priority: EnumTaskPriority.HIGH,
+      };
+
+      const result = service.createTask(createTaskDto);
+
+      expect(result.tags).toHaveLength(3);
+      expect(result.tags).toContain(EnumTaskTag.WORK);
+      expect(result.tags).toContain(EnumTaskTag.EDUCATION);
+      expect(result.tags).toContain(EnumTaskTag.HOME);
+    });
+
     it('should add created task to tasks array', () => {
       const initialLength = (service as any).tasks.length;
       const createTaskDto: CreateTaskDto = {
         title: 'New Task',
         description: 'New Description',
-        category: 'Testing',
+        tags: [EnumTaskTag.WORK],
         priority: EnumTaskPriority.LOW,
       };
 
@@ -230,8 +297,28 @@ describe('TasksService', () => {
 
       expect(result.title).toBe('Only Title Updated');
       expect(result.description).toBe(originalTask.description);
-      expect(result.category).toBe(originalTask.category);
+      expect(result.tags).toEqual(originalTask.tags);
       expect(result.priority).toBe(originalTask.priority);
+    });
+
+    it('should update tags field', () => {
+      const updateTaskDto: UpdateTaskDto = {
+        tags: [EnumTaskTag.HOME, EnumTaskTag.PERSONAL],
+      };
+
+      const result = service.updateTask('1', updateTaskDto);
+
+      expect(result.tags).toEqual([EnumTaskTag.HOME, EnumTaskTag.PERSONAL]);
+    });
+
+    it('should update tags to empty array', () => {
+      const updateTaskDto: UpdateTaskDto = {
+        tags: [],
+      };
+
+      const result = service.updateTask('1', updateTaskDto);
+
+      expect(result.tags).toEqual([]);
     });
 
     it('should update isBlocked field', () => {
@@ -266,6 +353,57 @@ describe('TasksService', () => {
           originalUpdatedAt.getTime(),
         );
       }, 10);
+    });
+  });
+
+  describe('toggleTaskBlocked', () => {
+    it('should toggle isBlocked from false to true', () => {
+      const result = service.toggleTaskBlocked('1');
+
+      expect(result.isBlocked).toBe(true);
+      expect(result.id).toBe('1');
+      expect(result.updatedAt).toBeInstanceOf(Date);
+    });
+
+    it('should toggle isBlocked from true to false', () => {
+      const result = service.toggleTaskBlocked('2');
+
+      expect(result.isBlocked).toBe(false);
+      expect(result.id).toBe('2');
+      expect(result.updatedAt).toBeInstanceOf(Date);
+    });
+
+    it('should update updatedAt timestamp', () => {
+      const originalUpdatedAt = mockTasks[0].updatedAt;
+
+      setTimeout(() => {
+        const result = service.toggleTaskBlocked('1');
+        expect(result.updatedAt.getTime()).toBeGreaterThan(
+          originalUpdatedAt.getTime(),
+        );
+      }, 10);
+    });
+
+    it('should throw NotFoundException when task not found', () => {
+      expect(() => service.toggleTaskBlocked('non-existent')).toThrow(
+        NotFoundException,
+      );
+      expect(() => service.toggleTaskBlocked('non-existent')).toThrow(
+        'Task with ID non-existent not found',
+      );
+    });
+
+    it('should preserve other task properties when toggling', () => {
+      const originalTask = { ...mockTasks[0] };
+      const result = service.toggleTaskBlocked('1');
+
+      expect(result.title).toBe(originalTask.title);
+      expect(result.description).toBe(originalTask.description);
+      expect(result.tags).toEqual(originalTask.tags);
+      expect(result.priority).toBe(originalTask.priority);
+      expect(result.status).toBe(originalTask.status);
+      expect(result.id).toBe(originalTask.id);
+      expect(result.createdAt).toEqual(originalTask.createdAt);
     });
   });
 
