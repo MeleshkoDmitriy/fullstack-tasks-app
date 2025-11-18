@@ -1,4 +1,4 @@
-import { IsEnum, IsNotEmpty, IsString } from 'class-validator';
+import { IsEnum, IsNotEmpty, IsString, Length } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 import { EnumTaskPriority } from '../tasks.model';
 
@@ -10,6 +10,7 @@ export class CreateTaskDto {
   })
   @IsString()
   @IsNotEmpty({ message: 'Title is required' })
+  @Length(1, 50)
   title: string;
 
   @ApiProperty({
@@ -20,6 +21,7 @@ export class CreateTaskDto {
   })
   @IsString()
   @IsNotEmpty({ message: 'Description is required' })
+  @Length(1, 200)
   description: string;
 
   @ApiProperty({
@@ -29,6 +31,7 @@ export class CreateTaskDto {
   })
   @IsString()
   @IsNotEmpty({ message: 'Category is required' })
+  @Length(1, 50)
   category: string;
 
   @ApiProperty({
