@@ -67,11 +67,7 @@ export class TasksService {
   }
 
   updateTask(id: string, updateTaskDto: UpdateTaskDto): ITask {
-    const foundTask = this.tasks.find((t: ITask) => t.id === id);
-
-    if (!foundTask) {
-      throw new NotFoundException(`Task with ID ${id} not found`);
-    }
+    const foundTask = this.findOneTask(id);
 
     foundTask.updatedAt = new Date();
 
