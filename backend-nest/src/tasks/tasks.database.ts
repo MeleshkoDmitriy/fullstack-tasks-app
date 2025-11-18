@@ -1,4 +1,9 @@
-import { EnumTaskPriority, EnumTaskStatus, ITask } from './tasks.model';
+import {
+  EnumTaskPriority,
+  EnumTaskStatus,
+  EnumTaskTag,
+  ITask,
+} from './tasks.model';
 
 export const tasksDatabase: ITask[] = [
   {
@@ -6,7 +11,7 @@ export const tasksDatabase: ITask[] = [
     title: 'Настроить NestJS проект',
     description:
       'Инициализировать проект, настроить модули, контроллеры и сервисы.',
-    category: 'Backend',
+    tags: [EnumTaskTag.WORK, EnumTaskTag.HOME],
     priority: EnumTaskPriority.HIGH,
     status: EnumTaskStatus.IN_PROGRESS,
     createdAt: new Date('2025-11-10T10:00:00Z'),
@@ -18,7 +23,7 @@ export const tasksDatabase: ITask[] = [
     title: 'Сверстать главный экран Next.js',
     description:
       'Создать компонент главной страницы, сверстать колонки Kanban.',
-    category: 'Frontend',
+    tags: [EnumTaskTag.WORK],
     priority: EnumTaskPriority.MEDIUM,
     status: EnumTaskStatus.TODO,
     createdAt: new Date('2025-11-11T11:00:00Z'),
@@ -30,7 +35,7 @@ export const tasksDatabase: ITask[] = [
     title: 'Написать DTO и валидацию',
     description:
       'Создать CreateTaskDto, UpdateTaskDto, GetTasksFilterDto с class-validator.',
-    category: 'Backend',
+    tags: [EnumTaskTag.WORK],
     priority: EnumTaskPriority.HIGH,
     status: EnumTaskStatus.DONE,
     createdAt: new Date('2025-11-09T15:00:00Z'),
@@ -41,7 +46,7 @@ export const tasksDatabase: ITask[] = [
     id: 'a1b2c3d4-4444-4444-a444-a1b2c3d4e5f4',
     title: 'Настроить Swagger',
     description: 'Добавить генерацию OpenAPI документации в main.ts.',
-    category: 'DevOps',
+    tags: [EnumTaskTag.WORK],
     priority: EnumTaskPriority.LOW,
     status: EnumTaskStatus.DONE,
     createdAt: new Date('2025-11-10T17:00:00Z'),
@@ -52,7 +57,7 @@ export const tasksDatabase: ITask[] = [
     id: 'a1b2c3d4-5555-4555-a555-a1b2c3d4e5f5',
     title: 'Реализовать API-слой на фронте',
     description: 'Настроить Axios или Fetch для запросов к NestJS API.',
-    category: 'Frontend',
+    tags: [EnumTaskTag.WORK],
     priority: EnumTaskPriority.MEDIUM,
     status: EnumTaskStatus.TODO,
     createdAt: new Date('2025-11-12T08:30:00Z'),
@@ -63,7 +68,7 @@ export const tasksDatabase: ITask[] = [
     id: 'a1b2c3d4-6666-4666-a666-a1b2c3d4e5f6',
     title: 'Подключить Expo-проект',
     description: '',
-    category: 'Mobile',
+    tags: [EnumTaskTag.WORK],
     priority: EnumTaskPriority.LOW,
     status: EnumTaskStatus.TODO,
     createdAt: new Date('2025-11-12T09:00:00Z'),
@@ -74,7 +79,7 @@ export const tasksDatabase: ITask[] = [
     id: 'a1b2c3d4-7777-4777-a777-a1b2c3d4e5f7',
     title: 'Протестировать поиск API',
     description: 'Проверить, как работает поиск по title и category.',
-    category: 'QA',
+    tags: [EnumTaskTag.WORK],
     priority: EnumTaskPriority.MEDIUM,
     status: EnumTaskStatus.IN_PROGRESS,
     createdAt: new Date('2025-11-11T16:00:00Z'),

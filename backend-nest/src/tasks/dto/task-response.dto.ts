@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { EnumTaskPriority, EnumTaskStatus } from '../tasks.model';
+import { EnumTaskPriority, EnumTaskStatus, EnumTaskTag } from '../tasks.model';
 
 export class TaskResponseDto {
   @ApiProperty({
@@ -21,10 +21,12 @@ export class TaskResponseDto {
   description: string;
 
   @ApiProperty({
-    description: 'Task category',
-    example: 'Development',
+    description: 'Task tags',
+    enum: EnumTaskTag,
+    example: [EnumTaskTag.WORK, EnumTaskTag.EDUCATION],
+    isArray: true,
   })
-  category: string;
+  tags: EnumTaskTag[];
 
   @ApiProperty({
     description: 'Task priority level',

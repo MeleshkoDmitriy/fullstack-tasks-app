@@ -1,6 +1,6 @@
-import { IsEnum, IsNotEmpty, IsString, Length } from 'class-validator';
+import { IsArray, IsEnum, IsNotEmpty, IsString, Length } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
-import { EnumTaskPriority } from '../tasks.model';
+import { EnumTaskPriority, EnumTaskTag } from '../tasks.model';
 
 export class CreateTaskDto {
   @ApiProperty({
@@ -25,14 +25,15 @@ export class CreateTaskDto {
   description: string;
 
   @ApiProperty({
-    description: 'Task category',
-    example: 'Development',
-    type: String,
+    description: 'Task tags (array of tags)',
+    enum: EnumTaskTag,
+    example: [EnumTaskTag.WORK, EnumTaskTag.EDUCATION],
+    isArray: true,
   })
-  @IsString()
-  @IsNotEmpty({ message: 'Category is required' })
-  @Length(1, 50)
-  category: string;
+  @IsArray()
+  @IsEnum(EnumTaskTag, { each: true })
+  @IsNotEmpty({ message: 'Tags are required (can be empty array)' })
+  tags: EnumTaskTag[];
 
   @ApiProperty({
     description: 'Task priority level',

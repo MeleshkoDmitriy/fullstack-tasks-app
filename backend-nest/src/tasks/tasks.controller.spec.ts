@@ -2,7 +2,12 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { NotFoundException } from '@nestjs/common';
 import { TasksController } from './tasks.controller';
 import { TasksService } from './tasks.service';
-import { EnumTaskPriority, EnumTaskStatus, ITask } from './tasks.model';
+import {
+  EnumTaskPriority,
+  EnumTaskStatus,
+  EnumTaskTag,
+  ITask,
+} from './tasks.model';
 import { CreateTaskDto, UpdateTaskDto, GetTasksFilterDto } from './dto';
 
 describe('TasksController', () => {
@@ -12,7 +17,7 @@ describe('TasksController', () => {
     id: '1',
     title: 'Test Task',
     description: 'Test Description',
-    category: 'Testing',
+    tags: [EnumTaskTag.WORK, EnumTaskTag.EDUCATION],
     priority: EnumTaskPriority.HIGH,
     status: EnumTaskStatus.TODO,
     isBlocked: false,
@@ -79,6 +84,19 @@ describe('TasksController', () => {
       expect(mockTasksService.findAllTasks).toHaveBeenCalledWith(filterDto);
     });
 
+    it('should return filtered tasks by tags', () => {
+      const filterDto: GetTasksFilterDto = {
+        tags: [EnumTaskTag.WORK],
+      };
+      const filteredTasks = [mockTask];
+      mockTasksService.findAllTasks.mockReturnValue(filteredTasks);
+
+      const result = controller.getAllTasksByFiltersAndSearch(filterDto);
+
+      expect(result).toEqual(filteredTasks);
+      expect(mockTasksService.findAllTasks).toHaveBeenCalledWith(filterDto);
+    });
+
     it('should return tasks filtered by search', () => {
       const filterDto: GetTasksFilterDto = { search: 'Test' };
       mockTasksService.findAllTasks.mockReturnValue(mockTasks);
@@ -116,7 +134,7 @@ describe('TasksController', () => {
       const createTaskDto: CreateTaskDto = {
         title: 'New Task',
         description: 'New Description',
-        category: 'Testing',
+        tags: [EnumTaskTag.WORK],
         priority: EnumTaskPriority.MEDIUM,
       };
       const createdTask: ITask = {
@@ -139,7 +157,7 @@ describe('TasksController', () => {
       const createTaskDto: CreateTaskDto = {
         title: 'Another Task',
         description: 'Another Description',
-        category: 'Backend',
+        tags: [EnumTaskTag.WORK, EnumTaskTag.EDUCATION],
         priority: EnumTaskPriority.LOW,
       };
       mockTasksService.createTask.mockReturnValue({
@@ -151,8 +169,25 @@ describe('TasksController', () => {
 
       expect(result.title).toBe(createTaskDto.title);
       expect(result.description).toBe(createTaskDto.description);
-      expect(result.category).toBe(createTaskDto.category);
+      expect(result.tags).toEqual(createTaskDto.tags);
       expect(result.priority).toBe(createTaskDto.priority);
+    });
+
+    it('should create task with empty tags array', () => {
+      const createTaskDto: CreateTaskDto = {
+        title: 'Task without tags',
+        description: 'Description',
+        tags: [],
+        priority: EnumTaskPriority.MEDIUM,
+      };
+      mockTasksService.createTask.mockReturnValue({
+        ...mockTask,
+        ...createTaskDto,
+      });
+
+      const result = controller.postTask(createTaskDto);
+
+      expect(result.tags).toEqual([]);
     });
   });
 
@@ -252,6 +287,26 @@ describe('TasksController', () => {
       const result = controller.updateTaskById('1', updateTaskDto);
 
       expect(result.isBlocked).toBe(true);
+      expect(mockTasksService.updateTask).toHaveBeenCalledWith(
+        '1',
+        updateTaskDto,
+      );
+    });
+
+    it('should update tags field', () => {
+      const updateTaskDto: UpdateTaskDto = {
+        tags: [EnumTaskTag.HOME, EnumTaskTag.PERSONAL],
+      };
+      const updatedTask: ITask = {
+        ...mockTask,
+        tags: [EnumTaskTag.HOME, EnumTaskTag.PERSONAL],
+        updatedAt: new Date(),
+      };
+      mockTasksService.updateTask.mockReturnValue(updatedTask);
+
+      const result = controller.updateTaskById('1', updateTaskDto);
+
+      expect(result.tags).toEqual([EnumTaskTag.HOME, EnumTaskTag.PERSONAL]);
       expect(mockTasksService.updateTask).toHaveBeenCalledWith(
         '1',
         updateTaskDto,

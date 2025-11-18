@@ -1,5 +1,5 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { EnumTaskStatus, ITask } from './tasks.model';
+import { EnumTaskStatus, EnumTaskTag, ITask } from './tasks.model';
 import { tasksDatabase } from './tasks.database';
 import { v4 as uuid } from 'uuid';
 import { GetTasksFilterDto, CreateTaskDto, UpdateTaskDto } from './dto';
@@ -23,6 +23,14 @@ export class TasksService {
       tasks = tasks.filter((t) => t.status === filterDto.status);
     }
 
+    if (filterDto.tags && filterDto.tags.length > 0) {
+      tasks = tasks.filter((t) =>
+        filterDto.tags!.some((filterTag: EnumTaskTag) =>
+          t.tags.includes(filterTag),
+        ),
+      );
+    }
+
     if (filterDto.search) {
       const lowerCaseSearchString = filterDto.search.toLowerCase();
 
@@ -30,7 +38,9 @@ export class TasksService {
         (t) =>
           t.title.toLowerCase().includes(lowerCaseSearchString) ||
           t.description.toLowerCase().includes(lowerCaseSearchString) ||
-          t.category.toLowerCase().includes(lowerCaseSearchString),
+          t.tags.some((tag) =>
+            tag.toLowerCase().includes(lowerCaseSearchString),
+          ),
       );
     }
 
@@ -54,7 +64,7 @@ export class TasksService {
       id: uuid(),
       title: createTaskDto.title,
       description: createTaskDto.description,
-      category: createTaskDto.category,
+      tags: createTaskDto.tags,
       priority: createTaskDto.priority,
       status: EnumTaskStatus.TODO,
       createdAt: date,
@@ -73,7 +83,7 @@ export class TasksService {
 
     foundTask.title = updateTaskDto.title ?? foundTask.title;
     foundTask.description = updateTaskDto.description ?? foundTask.description;
-    foundTask.category = updateTaskDto.category ?? foundTask.category;
+    foundTask.tags = updateTaskDto.tags ?? foundTask.tags;
     foundTask.priority = updateTaskDto.priority ?? foundTask.priority;
     foundTask.status = updateTaskDto.status ?? foundTask.status;
     foundTask.isBlocked = updateTaskDto.isBlocked ?? foundTask.isBlocked;
