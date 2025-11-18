@@ -127,14 +127,45 @@ describe('TasksService', () => {
       expect(result[0].description).toContain('Another');
     });
 
-    it('should filter tasks by search string in tags', () => {
-      const filterDto: GetTasksFilterDto = { search: 'work' };
+    it('should filter tasks by multiple search words (AND logic)', () => {
+      const filterDto: GetTasksFilterDto = { search: 'Test Task' };
       const result = service.findAllTasks(filterDto);
 
       expect(result.length).toBeGreaterThan(0);
-      expect(
-        result.some((t) => t.tags.some((tag) => String(tag).includes('work'))),
-      ).toBe(true);
+      result.forEach((task) => {
+        const searchText = `${task.title} ${task.description}`.toLowerCase();
+        expect(searchText).toContain('test');
+        expect(searchText).toContain('task');
+      });
+    });
+
+    it('should not find tasks when not all search words are present', () => {
+      const filterDto: GetTasksFilterDto = { search: 'Test Nonexistent' };
+      const result = service.findAllTasks(filterDto);
+
+      expect(result).toHaveLength(0);
+    });
+
+    it('should search only in title and description, not in tags', () => {
+      const filterDto: GetTasksFilterDto = { search: 'work' };
+      const result = service.findAllTasks(filterDto);
+
+      result.forEach((task) => {
+        const searchText = `${task.title} ${task.description}`.toLowerCase();
+        expect(searchText).toContain('work');
+      });
+    });
+
+    it('should combine search with other filters', () => {
+      const filterDto: GetTasksFilterDto = {
+        search: 'Test',
+        priority: EnumTaskPriority.HIGH,
+      };
+      const result = service.findAllTasks(filterDto);
+
+      expect(result).toHaveLength(1);
+      expect(result[0].title).toContain('Test');
+      expect(result[0].priority).toBe(EnumTaskPriority.HIGH);
     });
 
     it('should filter tasks by tags', () => {
