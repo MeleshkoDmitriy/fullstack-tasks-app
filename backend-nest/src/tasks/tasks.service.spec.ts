@@ -53,7 +53,12 @@ describe('TasksService', () => {
     }).compile();
 
     service = module.get<TasksService>(TasksService);
-    (service as any).tasks = [...mockTasks];
+    (service as any).tasks = mockTasks.map((task) => ({
+      ...task,
+      tags: [...task.tags],
+      createdAt: new Date(task.createdAt),
+      updatedAt: new Date(task.updatedAt),
+    }));
   });
 
   it('should be defined', () => {
@@ -128,7 +133,7 @@ describe('TasksService', () => {
 
       expect(result.length).toBeGreaterThan(0);
       expect(
-        result.some((t) => t.tags.some((tag) => tag.includes('work'))),
+        result.some((t) => t.tags.some((tag) => String(tag).includes('work'))),
       ).toBe(true);
     });
 
@@ -139,9 +144,7 @@ describe('TasksService', () => {
       const result = service.findAllTasks(filterDto);
 
       expect(result.length).toBeGreaterThan(0);
-      expect(
-        result.every((t) => t.tags.includes(EnumTaskTag.WORK)),
-      ).toBe(true);
+      expect(result.every((t) => t.tags.includes(EnumTaskTag.WORK))).toBe(true);
     });
 
     it('should filter tasks by multiple tags (OR logic)', () => {

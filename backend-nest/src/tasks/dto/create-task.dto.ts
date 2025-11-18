@@ -1,4 +1,11 @@
-import { IsArray, IsEnum, IsNotEmpty, IsString, Length } from 'class-validator';
+import {
+  ArrayMinSize,
+  IsArray,
+  IsEnum,
+  IsNotEmpty,
+  IsString,
+  Length,
+} from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 import { EnumTaskPriority, EnumTaskTag } from '../tasks.model';
 
@@ -31,7 +38,8 @@ export class CreateTaskDto {
     isArray: true,
   })
   @IsArray()
-  @IsEnum(EnumTaskTag, { each: true })
+  @ArrayMinSize(0, { message: 'Tags must be an array (can be empty)' })
+  @IsEnum(EnumTaskTag as unknown as object, { each: true })
   @IsNotEmpty({ message: 'Tags are required (can be empty array)' })
   tags: EnumTaskTag[];
 

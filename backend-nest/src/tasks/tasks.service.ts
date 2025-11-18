@@ -24,10 +24,9 @@ export class TasksService {
     }
 
     if (filterDto.tags && filterDto.tags.length > 0) {
+      const filterTags = filterDto.tags;
       tasks = tasks.filter((t) =>
-        filterDto.tags!.some((filterTag: EnumTaskTag) =>
-          t.tags.includes(filterTag),
-        ),
+        filterTags.some((filterTag: EnumTaskTag) => t.tags.includes(filterTag)),
       );
     }
 
@@ -39,7 +38,7 @@ export class TasksService {
           t.title.toLowerCase().includes(lowerCaseSearchString) ||
           t.description.toLowerCase().includes(lowerCaseSearchString) ||
           t.tags.some((tag) =>
-            tag.toLowerCase().includes(lowerCaseSearchString),
+            String(tag).toLowerCase().includes(lowerCaseSearchString),
           ),
       );
     }
@@ -101,12 +100,7 @@ export class TasksService {
   }
 
   deleteTask(id: string): void {
-    const foundTask = this.tasks.find((task: ITask) => task.id === id);
-
-    if (!foundTask) {
-      throw new NotFoundException(`Task with ID ${id} not found`);
-    }
-
+    this.findOneTask(id);
     this.tasks = this.tasks.filter((t: ITask) => t.id !== id);
   }
 }

@@ -78,7 +78,7 @@ export const tasksDatabase: ITask[] = [
   {
     id: 'a1b2c3d4-7777-4777-a777-a1b2c3d4e5f7',
     title: 'Протестировать поиск API',
-    description: 'Проверить, как работает поиск по title и category.',
+    description: 'Проверить, как работает поиск по title, description и tags.',
     tags: [EnumTaskTag.WORK],
     priority: EnumTaskPriority.MEDIUM,
     status: EnumTaskStatus.IN_PROGRESS,

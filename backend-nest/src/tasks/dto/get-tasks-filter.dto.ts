@@ -38,16 +38,24 @@ export class GetTasksFilterDto {
     isArray: true,
   })
   @Transform(({ value }): EnumTaskTag[] | undefined => {
+    const validTags = Object.values(EnumTaskTag);
     if (typeof value === 'string') {
-      return value.split(',').map((tag: string) => tag.trim() as EnumTaskTag);
+      const filtered = value
+        .split(',')
+        .map((tag: string) => tag.trim())
+        .filter((tag: string) => validTags.includes(tag as EnumTaskTag));
+      return filtered as EnumTaskTag[];
     }
     if (Array.isArray(value)) {
-      return value as EnumTaskTag[];
+      const filtered = value.filter((tag: unknown) =>
+        validTags.includes(tag as EnumTaskTag),
+      );
+      return filtered as EnumTaskTag[];
     }
     return undefined;
   })
   @IsArray()
-  @IsEnum(EnumTaskTag, { each: true })
+  @IsEnum(EnumTaskTag as unknown as object, { each: true })
   @IsOptional()
   tags?: EnumTaskTag[];
 

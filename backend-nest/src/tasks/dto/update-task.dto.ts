@@ -41,7 +41,7 @@ export class UpdateTaskDto extends PartialType(CreateTaskDto) {
   })
   @IsArray()
   @IsOptional()
-  @IsEnum(EnumTaskTag, { each: true })
+  @IsEnum(EnumTaskTag as unknown as object, { each: true })
   tags?: EnumTaskTag[];
 
   @ApiProperty({
