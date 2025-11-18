@@ -31,16 +31,20 @@ export class TasksService {
     }
 
     if (filterDto.search) {
-      const lowerCaseSearchString = filterDto.search.toLowerCase();
+      const searchWords = filterDto.search
+        .toLowerCase()
+        .split(/\s+/)
+        .filter((word) => word.length > 0);
 
-      tasks = tasks.filter(
-        (t) =>
-          t.title.toLowerCase().includes(lowerCaseSearchString) ||
-          t.description.toLowerCase().includes(lowerCaseSearchString) ||
-          t.tags.some((tag) =>
-            String(tag).toLowerCase().includes(lowerCaseSearchString),
-          ),
-      );
+      if (searchWords.length > 0) {
+        tasks = tasks.filter((t) => {
+          const titleLower = t.title.toLowerCase();
+          const descriptionLower = t.description.toLowerCase();
+          const searchText = `${titleLower} ${descriptionLower}`;
+
+          return searchWords.every((word) => searchText.includes(word));
+        });
+      }
     }
 
     return tasks;

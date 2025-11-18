@@ -41,7 +41,7 @@ export class TasksController {
   @ApiOperation({
     summary: 'Get all tasks',
     description:
-      'Retrieve all tasks with optional filtering by status, priority, tags, blocked status, and search query',
+      'Retrieve all tasks with optional filtering by status, priority, tags, blocked status, and search query. Search works only in title and description (not in tags). Tags must be valid enum values.',
   })
   @ApiQuery({
     name: 'status',
@@ -57,11 +57,19 @@ export class TasksController {
     name: 'tags',
     required: false,
     type: String,
-    description: 'Comma-separated tags (e.g., work,education)',
+    description:
+      'Comma-separated tags for filtering (e.g., work,education). Valid tags: work, home, personal, health, shopping, finance, education, family, social, travel, food, car, pet, hobby, sport. Invalid tags will return 400 error.',
     example: 'work,education',
   })
   @ApiQuery({ name: 'isBlocked', required: false, type: Boolean })
-  @ApiQuery({ name: 'search', required: false, type: String })
+  @ApiQuery({
+    name: 'search',
+    required: false,
+    type: String,
+    description:
+      'Search query to find tasks by title or description. Supports multiple words (AND logic - all words must be present). Case-insensitive.',
+    example: 'project documentation',
+  })
   @ApiResponse({
     status: HttpStatus.OK,
     description: 'List of tasks retrieved successfully',
@@ -70,6 +78,10 @@ export class TasksController {
   @ApiResponse({
     status: HttpStatus.UNAUTHORIZED,
     description: 'Unauthorized',
+  })
+  @ApiResponse({
+    status: HttpStatus.BAD_REQUEST,
+    description: 'Invalid tags provided',
   })
   getAllTasksByFiltersAndSearch(
     @Query() filterDto: GetTasksFilterDto,

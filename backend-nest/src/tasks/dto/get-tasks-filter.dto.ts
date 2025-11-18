@@ -5,9 +5,45 @@ import {
   IsEnum,
   IsOptional,
   IsString,
+  registerDecorator,
+  ValidationOptions,
+  ValidatorConstraint,
+  ValidatorConstraintInterface,
+  Validate,
 } from 'class-validator';
+import { BadRequestException } from '@nestjs/common';
 import { ApiProperty } from '@nestjs/swagger';
 import { EnumTaskPriority, EnumTaskStatus, EnumTaskTag } from '../tasks.model';
+
+@ValidatorConstraint({ async: false })
+class IsValidTagsConstraint implements ValidatorConstraintInterface {
+  validate(value: unknown): boolean {
+    if (!value || !Array.isArray(value) || value.length === 0) {
+      return true;
+    }
+    const validTags = Object.values(EnumTaskTag);
+    return value.every((tag: unknown) =>
+      validTags.includes(tag as EnumTaskTag),
+    );
+  }
+
+  defaultMessage(): string {
+    const validTags = Object.values(EnumTaskTag).join(', ');
+    return `tags must be one of the following values: ${validTags}`;
+  }
+}
+
+function IsValidTags(validationOptions?: ValidationOptions) {
+  return function (object: object, propertyName: string) {
+    registerDecorator({
+      target: object.constructor,
+      propertyName: propertyName,
+      options: validationOptions,
+      constraints: [],
+      validator: IsValidTagsConstraint,
+    });
+  };
+}
 
 export class GetTasksFilterDto {
   @ApiProperty({
@@ -38,22 +74,34 @@ export class GetTasksFilterDto {
     isArray: true,
   })
   @Transform(({ value }): EnumTaskTag[] | undefined => {
+    if (value === undefined || value === null) {
+      return undefined;
+    }
     const validTags = Object.values(EnumTaskTag);
+    let tagsToCheck: string[] = [];
+
     if (typeof value === 'string') {
-      const filtered = value
-        .split(',')
-        .map((tag: string) => tag.trim())
-        .filter((tag: string) => validTags.includes(tag as EnumTaskTag));
-      return filtered as EnumTaskTag[];
+      tagsToCheck = value.split(',').map((tag: string) => tag.trim());
+    } else if (Array.isArray(value)) {
+      tagsToCheck = value.map((tag: unknown) => String(tag).trim());
+    } else {
+      return undefined;
     }
-    if (Array.isArray(value)) {
-      const filtered = value.filter((tag: unknown) =>
-        validTags.includes(tag as EnumTaskTag),
+
+    const invalidTags = tagsToCheck.filter(
+      (tag) => !validTags.includes(tag as EnumTaskTag),
+    );
+
+    if (invalidTags.length > 0) {
+      const validTagsList = validTags.join(', ');
+      throw new BadRequestException(
+        `Invalid tag(s): ${invalidTags.join(', ')}. Must be one of: ${validTagsList}`,
       );
-      return filtered as EnumTaskTag[];
     }
-    return undefined;
+
+    return tagsToCheck as EnumTaskTag[];
   })
+  @Validate(IsValidTags)
   @IsArray()
   @IsEnum(EnumTaskTag as unknown as object, { each: true })
   @IsOptional()
@@ -75,7 +123,7 @@ export class GetTasksFilterDto {
   isBlocked?: boolean;
 
   @ApiProperty({
-    description: 'Search tasks by title, description or tags',
+    description: 'Search tasks by title or description',
     example: 'documentation',
     type: String,
     required: false,
