@@ -81,6 +81,15 @@ export class TasksService {
     return foundTask;
   }
 
+  toggleTaskBlocked(id: string): ITask {
+    const foundTask = this.findOneTask(id);
+
+    foundTask.isBlocked = !foundTask.isBlocked;
+    foundTask.updatedAt = new Date();
+
+    return foundTask;
+  }
+
   deleteTask(id: string): void {
     const foundTask = this.tasks.find((task: ITask) => task.id === id);
 

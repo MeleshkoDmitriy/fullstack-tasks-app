@@ -121,6 +121,34 @@ export class TasksController {
     return this.tasksService.createTask(createTaskDto);
   }
 
+  @Patch('/:id/toggle-blocked')
+  @ApiOperation({
+    summary: 'Toggle task blocked status',
+    description:
+      'Toggle the blocked status of a task by ID. No request body required.',
+  })
+  @ApiParam({
+    name: 'id',
+    description: 'Task unique identifier',
+    example: '123e4567-e89b-12d3-a456-426614174000',
+  })
+  @ApiResponse({
+    status: HttpStatus.OK,
+    description: 'Task blocked status toggled successfully',
+    type: TaskResponseDto,
+  })
+  @ApiResponse({
+    status: HttpStatus.NOT_FOUND,
+    description: 'Task not found',
+  })
+  @ApiResponse({
+    status: HttpStatus.UNAUTHORIZED,
+    description: 'Unauthorized',
+  })
+  toggleTaskById(@Param('id') id: string): ITask {
+    return this.tasksService.toggleTaskBlocked(id);
+  }
+
   @Patch('/:id')
   @ApiOperation({
     summary: 'Update a task',

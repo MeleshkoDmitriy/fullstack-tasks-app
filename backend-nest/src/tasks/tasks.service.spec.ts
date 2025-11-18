@@ -269,6 +269,57 @@ describe('TasksService', () => {
     });
   });
 
+  describe('toggleTaskBlocked', () => {
+    it('should toggle isBlocked from false to true', () => {
+      const result = service.toggleTaskBlocked('1');
+
+      expect(result.isBlocked).toBe(true);
+      expect(result.id).toBe('1');
+      expect(result.updatedAt).toBeInstanceOf(Date);
+    });
+
+    it('should toggle isBlocked from true to false', () => {
+      const result = service.toggleTaskBlocked('2');
+
+      expect(result.isBlocked).toBe(false);
+      expect(result.id).toBe('2');
+      expect(result.updatedAt).toBeInstanceOf(Date);
+    });
+
+    it('should update updatedAt timestamp', () => {
+      const originalUpdatedAt = mockTasks[0].updatedAt;
+
+      setTimeout(() => {
+        const result = service.toggleTaskBlocked('1');
+        expect(result.updatedAt.getTime()).toBeGreaterThan(
+          originalUpdatedAt.getTime(),
+        );
+      }, 10);
+    });
+
+    it('should throw NotFoundException when task not found', () => {
+      expect(() => service.toggleTaskBlocked('non-existent')).toThrow(
+        NotFoundException,
+      );
+      expect(() => service.toggleTaskBlocked('non-existent')).toThrow(
+        'Task with ID non-existent not found',
+      );
+    });
+
+    it('should preserve other task properties when toggling', () => {
+      const originalTask = { ...mockTasks[0] };
+      const result = service.toggleTaskBlocked('1');
+
+      expect(result.title).toBe(originalTask.title);
+      expect(result.description).toBe(originalTask.description);
+      expect(result.category).toBe(originalTask.category);
+      expect(result.priority).toBe(originalTask.priority);
+      expect(result.status).toBe(originalTask.status);
+      expect(result.id).toBe(originalTask.id);
+      expect(result.createdAt).toEqual(originalTask.createdAt);
+    });
+  });
+
   describe('deleteTask', () => {
     it('should delete a task by id', () => {
       const initialLength = (service as any).tasks.length;

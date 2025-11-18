@@ -27,6 +27,7 @@ describe('TasksController', () => {
     findOneTask: jest.fn(),
     createTask: jest.fn(),
     updateTask: jest.fn(),
+    toggleTaskBlocked: jest.fn(),
     deleteTask: jest.fn(),
   };
 
@@ -152,6 +153,65 @@ describe('TasksController', () => {
       expect(result.description).toBe(createTaskDto.description);
       expect(result.category).toBe(createTaskDto.category);
       expect(result.priority).toBe(createTaskDto.priority);
+    });
+  });
+
+  describe('toggleTaskById', () => {
+    it('should toggle task blocked status', () => {
+      const toggledTask: ITask = {
+        ...mockTask,
+        isBlocked: true,
+        updatedAt: new Date(),
+      };
+      mockTasksService.toggleTaskBlocked.mockReturnValue(toggledTask);
+
+      const result = controller.toggleTaskById('1');
+
+      expect(result).toEqual(toggledTask);
+      expect(result.isBlocked).toBe(true);
+      expect(mockTasksService.toggleTaskBlocked).toHaveBeenCalledWith('1');
+      expect(mockTasksService.toggleTaskBlocked).toHaveBeenCalledTimes(1);
+    });
+
+    it('should toggle from blocked to unblocked', () => {
+      const blockedTask: ITask = {
+        ...mockTask,
+        isBlocked: true,
+      };
+      const unblockedTask: ITask = {
+        ...blockedTask,
+        isBlocked: false,
+        updatedAt: new Date(),
+      };
+      mockTasksService.toggleTaskBlocked.mockReturnValue(unblockedTask);
+
+      const result = controller.toggleTaskById('1');
+
+      expect(result.isBlocked).toBe(false);
+      expect(mockTasksService.toggleTaskBlocked).toHaveBeenCalledWith('1');
+    });
+
+    it('should throw NotFoundException when task not found', () => {
+      mockTasksService.toggleTaskBlocked.mockImplementation(() => {
+        throw new NotFoundException('Task with ID 999 not found');
+      });
+
+      expect(() => controller.toggleTaskById('999')).toThrow(NotFoundException);
+      expect(mockTasksService.toggleTaskBlocked).toHaveBeenCalledWith('999');
+    });
+
+    it('should not require request body', () => {
+      const toggledTask: ITask = {
+        ...mockTask,
+        isBlocked: true,
+        updatedAt: new Date(),
+      };
+      mockTasksService.toggleTaskBlocked.mockReturnValue(toggledTask);
+
+      const result = controller.toggleTaskById('1');
+
+      expect(result).toBeDefined();
+      expect(mockTasksService.toggleTaskBlocked).toHaveBeenCalledWith('1');
     });
   });
 
