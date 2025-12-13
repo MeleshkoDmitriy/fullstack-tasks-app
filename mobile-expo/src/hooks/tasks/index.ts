@@ -65,7 +65,7 @@ export const useUpdateTask = () => {
       queryClient.invalidateQueries({ queryKey: tasksKeysConfig.lists() });
     },
     onError: (error) => {
-      console.error('Failed to create task:', error);
+      console.error('Failed to update task:', error);
     },
   });
 };
@@ -80,7 +80,7 @@ export const useToggleTaskBlocked = () => {
       queryClient.invalidateQueries({ queryKey: tasksKeysConfig.lists() });
     },
     onError: (error) => {
-      console.error('Failed to create task:', error);
+      console.error('Failed to toggle task blocked status:', error);
     },
   });
 };
@@ -95,7 +95,7 @@ export const useDeleteTask = () => {
       queryClient.invalidateQueries({ queryKey: tasksKeysConfig.lists() });
     },
     onError: (error) => {
-      console.error('Failed to create task:', error);
+      console.error('Failed to delete task:', error);
     },
   });
 };
