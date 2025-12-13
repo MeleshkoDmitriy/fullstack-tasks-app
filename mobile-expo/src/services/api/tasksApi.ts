@@ -1,6 +1,7 @@
 import {
   CreateTaskPayload,
   TGetTasksFilters,
+  TIdTask,
   TTask,
   UpdateTaskPayload,
 } from '../../types';
@@ -24,7 +25,7 @@ export const tasksApi = {
     return response.data;
   },
 
-  getTaskById: async (id: TTask['id']): Promise<TTask> => {
+  getTaskById: async (id: TIdTask): Promise<TTask> => {
     const response = await apiClient.get<TTask>(`${TASKS_ROUTE}/${id}`);
 
     return response.data;
@@ -37,7 +38,7 @@ export const tasksApi = {
   },
 
   updateTask: async (
-    id: TTask['id'],
+    id: TIdTask,
     payload: UpdateTaskPayload
   ): Promise<TTask> => {
     const response = await apiClient.patch<TTask>(
@@ -48,7 +49,7 @@ export const tasksApi = {
     return response.data;
   },
 
-  toggleBlockedTask: async (id: TTask['id']): Promise<TTask> => {
+  toggleBlockedTask: async (id: TIdTask): Promise<TTask> => {
     const response = await apiClient.patch<TTask>(
       `${TASKS_ROUTE}/${id}/toggle-blocked`
     );
@@ -56,7 +57,7 @@ export const tasksApi = {
     return response.data;
   },
 
-  deleteTask: async (id: TTask['id']): Promise<void> => {
+  deleteTask: async (id: TIdTask): Promise<void> => {
     await apiClient.delete(`${TASKS_ROUTE}/${id}`);
   },
 };

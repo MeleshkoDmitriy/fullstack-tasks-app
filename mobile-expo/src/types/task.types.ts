@@ -40,6 +40,8 @@ export type TTask = {
   updateAt: Date;
 };
 
+export type TIdTask = TTask['id'];
+
 export type CreateTaskPayload = Pick<
   TTask,
   'title' | 'description' | 'tags' | 'priority'
