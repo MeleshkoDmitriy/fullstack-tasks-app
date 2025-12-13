@@ -40,12 +40,17 @@ export type TTask = {
   updateAt: Date;
 };
 
+export type CreateTaskPayload = Pick<
+  TTask,
+  'title' | 'description' | 'tags' | 'priority'
+>;
 
-// export type CreateTaskDto = {
-// }
-
-// export type UpdateTaskDto = {
-// }
+export type UpdateTaskPayload = Partial<
+  Pick<
+    TTask,
+    'title' | 'description' | 'tags' | 'priority' | 'status' | 'isBlocked'
+  >
+>;
 
 export type TGetTasksFilters = {
   search?: string;
@@ -53,4 +58,4 @@ export type TGetTasksFilters = {
   priority?: EnumTaskPriority;
   tags?: EnumTaskTag[];
   isBlocked?: boolean;
-}
+};
