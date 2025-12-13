@@ -4,15 +4,40 @@ import {
   TIdTask,
   TTask,
   UpdateTaskPayload,
-} from '../../types';
-import { apiClient } from './apiClient';
+} from "../../types";
+import { apiClient } from "./apiClient";
 
-const TASKS_ROUTE = '/tasks';
+const TASKS_ROUTE = "/tasks";
 
-const buildQueryParams = (filters?: TGetTasksFilters) => {
+const buildQueryParams = (
+  filters?: TGetTasksFilters
+): Record<string, string | boolean> => {
   if (!filters) return {};
 
-  const params = {};
+  const params: Record<string, string | boolean> = {};
+
+  if (filters.status) {
+    params.status = filters.status;
+  }
+
+  if (filters.priority) {
+    params.priority = filters.priority;
+  }
+
+  if (filters.tags && filters.tags.length > 0) {
+    params.tags = filters.tags.join(",");
+  }
+
+  if (
+    filters.isBlocked !== undefined &&
+    typeof filters.isBlocked === "boolean"
+  ) {
+    params.isBlocked = filters.isBlocked;
+  }
+
+  if (filters.search && filters.search.trim().length > 0) {
+    params.search = filters.search.trim();
+  }
 
   return params;
 };
