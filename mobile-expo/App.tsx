@@ -1,12 +1,13 @@
-// import { StatusBar } from 'expo-status-bar';
-
+import { ErrorBoundary } from './src/components';
 import { AppNavigator } from './src/navigation';
-import { TanstackProvider } from './src/providers';
+import { AppProvider } from './src/providers';
 
 export default function App() {
   return (
-    <TanstackProvider>
-      <AppNavigator />
-    </TanstackProvider>
+    <ErrorBoundary>
+      <AppProvider>
+        <AppNavigator />
+      </AppProvider>
+    </ErrorBoundary>
   );
 }

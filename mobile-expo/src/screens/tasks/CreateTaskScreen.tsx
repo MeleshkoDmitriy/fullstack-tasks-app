@@ -1,10 +1,10 @@
-import { Text, View } from "react-native"
-
+import { Text } from "react-native";
+import { ScreenWrapper } from "../../components";
 
 export const CreateTaskScreen = () => {
   return (
-    <View>
+    <ScreenWrapper scrollable keyboardAvoiding>
       <Text>CreateTaskScreen</Text>
-    </View>
-  )
-}
+    </ScreenWrapper>
+  );
+};
