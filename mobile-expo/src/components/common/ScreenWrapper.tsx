@@ -21,8 +21,8 @@ interface ScreenWrapperProps {
 
 export const ScreenWrapper = ({
   children,
-  safeAreaTop = true,
-  safeAreaBottom = true,
+  safeAreaTop = false,
+  safeAreaBottom = false,
   scrollable = false,
   keyboardAvoiding = false,
   style,
@@ -70,13 +70,14 @@ export const ScreenWrapper = ({
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
   },
   content: {
     flex: 1,
+    padding: 16,
   },
   scrollView: {
     flex: 1,
+    padding: 16,
   },
   scrollContent: {
     flexGrow: 1,

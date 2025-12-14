@@ -1,6 +1,6 @@
-import { FlatList, Text, View } from 'react-native';
-import { ScreenWrapper } from '../../components';
-import { useTasks } from '../../hooks';
+import { FlatList, Text, View } from "react-native";
+import { ScreenWrapper } from "../../components";
+import { useTasks } from "../../hooks";
 
 export const TasksListScreen = () => {
   const { data: tasks, isLoading } = useTasks();
@@ -19,7 +19,11 @@ export const TasksListScreen = () => {
       <FlatList
         data={tasks}
         keyExtractor={(task) => task.id}
-        renderItem={({ item }) => <View><Text>{item.title}</Text></View>}
+        renderItem={({ item }) => (
+          <View>
+            <Text>{item.title}</Text>
+          </View>
+        )}
       />
     </ScreenWrapper>
   );

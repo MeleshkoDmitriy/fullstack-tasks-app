@@ -1,6 +1,7 @@
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { Ionicons } from '@expo/vector-icons';
 import { CreateTaskScreen, EditTaskScreen, TasksListScreen } from '../screens';
+import { CustomHeader } from '../components';
 
 export type TasksStackParamList = {
   TasksList: undefined;
@@ -12,35 +13,54 @@ const Stack = createNativeStackNavigator<TasksStackParamList>();
 
 export const TasksStackNavigator = () => {
   return (
-    <Stack.Navigator>
+    <Stack.Navigator screenOptions={{ headerTitleAlign: 'center' }}>
       <Stack.Screen
         name='TasksList'
         component={TasksListScreen}
-        options={{
-          title: 'My Tasks List',
-          headerRight: () => (
-            <Ionicons
-              name='add-circle'
-              size={30}
-              color='#000'
-              onPress={() => {}}
+        options={({ navigation }) => ({
+          header: () => (
+            <CustomHeader
+              title="My Tasks List"
+              rightButton={{
+                name: "add-circle",
+                size: 30,
+                onPress: () => navigation.navigate("CreateTask"),
+              }}
             />
           ),
-        }}
+        })}
       />
       <Stack.Screen
         name='CreateTask'
         component={CreateTaskScreen}
-        options={{
-          title: 'Create New Task',
-        }}
+        options={({ navigation }) => ({
+          header: () => (
+            <CustomHeader
+              title="Create New Task"
+              leftButton={{
+                name: "arrow-back",
+                size: 24,
+                onPress: () => navigation.goBack(),
+              }}
+            />
+          ),
+        })}
       />
       <Stack.Screen
         name='EditTask'
         component={EditTaskScreen}
-        options={{
-          title: 'Edit This Task',
-        }}
+        options={({ navigation }) => ({
+          header: () => (
+            <CustomHeader
+              title="Edit Task"
+              leftButton={{
+                name: "close",
+                size: 24,
+                onPress: () => navigation.goBack(),
+              }}
+            />
+          ),
+        })}
       />
     </Stack.Navigator>
   );

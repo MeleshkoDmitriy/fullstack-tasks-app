@@ -1,5 +1,6 @@
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { SettingsListScreen } from '../screens';
+import { CustomHeader } from '../components';
 
 export type SettingsStackParamList = {
   SettingList: undefined;
@@ -9,13 +10,17 @@ const Stack = createNativeStackNavigator<SettingsStackParamList>();
 
 export const SettingsStackNavigator = () => {
   return (
-    <Stack.Navigator>
+    <Stack.Navigator screenOptions={{ headerTitleAlign: 'center' }}>
       <Stack.Screen
         name='SettingList'
         component={SettingsListScreen}
-        options={{
-          title: 'Settings',
-        }}
+        options={({ navigation }) => ({
+          header: () => (
+            <CustomHeader
+              title="Setting List"
+            />
+          ),
+        })}
       />
     </Stack.Navigator>
   );
