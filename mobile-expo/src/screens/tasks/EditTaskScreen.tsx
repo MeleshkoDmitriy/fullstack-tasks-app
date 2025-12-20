@@ -1,5 +1,5 @@
 import { Text } from 'react-native';
-import { ScreenWrapper } from '../../components';
+import { ScreenWrapper } from '@/components';
 
 export const EditTaskScreen = () => {
   return (

@@ -1,6 +1,6 @@
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import { CreateTaskScreen, EditTaskScreen, TasksListScreen } from '../screens';
-import { CustomHeader } from '../components';
+import { CreateTaskScreen, EditTaskScreen, TasksListScreen } from '@/screens';
+import { CustomHeader } from '@/components';
 
 export type TasksStackParamList = {
   TasksList: undefined;

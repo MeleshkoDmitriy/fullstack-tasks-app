@@ -1,6 +1,6 @@
 import axios from "axios";
 import { Platform } from "react-native";
-import { CONSTANTS } from "../../constants";
+import { CONSTANTS } from "@/constants";
 
 const getBaseUrl = () => {
   const envUrl = process.env.NEST_BASE_URL || CONSTANTS.DEFAULT_URL;

@@ -5,9 +5,9 @@ import {
   TIdTask,
   TTask,
   UpdateTaskPayload,
-} from '../../types';
-import { tasksApi } from '../../services';
-import { CONSTANTS } from '../../constants';
+} from '@/types';
+import { tasksApi } from '@/services';
+import { CONSTANTS } from '@/constants';
 
 export const tasksKeysConfig = {
   all: ['tasks'],

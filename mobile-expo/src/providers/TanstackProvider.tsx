@@ -1,6 +1,6 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ReactNode } from 'react';
-import { CONSTANTS } from '../constants';
+import { CONSTANTS } from '@/constants';
 
 const queryClient = new QueryClient({
   defaultOptions: {

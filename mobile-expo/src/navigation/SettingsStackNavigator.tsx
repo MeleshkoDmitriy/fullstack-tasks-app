@@ -1,6 +1,6 @@
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import { SettingsListScreen } from '../screens';
-import { CustomHeader } from '../components';
+import { SettingsListScreen } from '@/screens';
+import { CustomHeader } from '@/components';
 
 export type SettingsStackParamList = {
   SettingList: undefined;

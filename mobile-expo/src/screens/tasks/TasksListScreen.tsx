@@ -1,6 +1,6 @@
 import { FlatList, Text, View } from "react-native";
-import { ScreenWrapper } from "../../components";
-import { useTasks } from "../../hooks";
+import { ScreenWrapper } from "@/components";
+import { useTasks } from "@/hooks";
 
 export const TasksListScreen = () => {
   const { data: tasks, isLoading } = useTasks();

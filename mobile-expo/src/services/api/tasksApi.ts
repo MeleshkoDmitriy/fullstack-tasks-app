@@ -4,7 +4,7 @@ import {
   TIdTask,
   TTask,
   UpdateTaskPayload,
-} from "../../types";
+} from "@/types";
 import { apiClient } from "./apiClient";
 
 const TASKS_ROUTE = "/tasks";

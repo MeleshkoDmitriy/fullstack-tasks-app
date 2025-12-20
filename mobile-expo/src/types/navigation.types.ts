@@ -1,4 +1,4 @@
-import { BottomTabsParamList } from '../navigation/BottomTabsNavigator';
+import { BottomTabsParamList } from '@/navigation/BottomTabsNavigator';
 
 declare global {
   namespace ReactNavigation {
