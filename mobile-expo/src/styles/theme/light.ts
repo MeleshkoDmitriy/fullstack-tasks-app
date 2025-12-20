@@ -1,23 +1,30 @@
-export const lightTheme = {
+import { Theme } from "@/types";
+
+export const lightTheme: Theme = {
   colors: {
-    primary: '#6200EE',
-    primaryDark: '#3700B3',
-    primaryLight: '#BB86FC',
-    background: '#FFFFFF',
-    text: '#000000',
-    textSecondary: 'rgba(0, 0, 0, 0.6)',
-    
-    priorityLow: '#4CAF50',
-    priorityMedium: '#FF9800',
-    priorityHigh: '#F44336',
-    
-    statusTodo: '#9E9E9E',
-    statusInProgress: '#2196F3',
-    statusDone: '#4CAF50',
-    
-    overlay: 'rgba(0, 0, 0, 0.5)',
-    backdrop: 'rgba(0, 0, 0, 0.32)',
+    base: {
+      primary: '#6200EE',
+      primaryDark: '#3700B3',
+      primaryLight: '#BB86FC',
+    },
+    text: {
+      primary: '#000000',
+      secondary: 'rgba(0, 0, 0, 0.6)',
+    },
+    priority: {
+      low: '#4CAF50',
+      medium: '#FF9800',
+      high: '#F44336',
+    },
+    status: {
+      todo: '#9E9E9E',
+      inProgress: '#2196F3',
+      done: '#4CAF50',
+    },
+    background: {
+      background: '#FFFFFF',
+      overlay: 'rgba(0, 0, 0, 0.5)',
+      backdrop: 'rgba(0, 0, 0, 0.32)',
+    },
   },
 } as const;
-
-export type TLightTheme = typeof lightTheme;

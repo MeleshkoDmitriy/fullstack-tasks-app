@@ -9,16 +9,12 @@ export const typography = {
     xxxl: 32,
   },
   fontWeight: {
+    thin: '200' as const,
     regular: '400' as const,
-    medium: '500' as const,
-    semibold: '600' as const,
     bold: '700' as const,
-  },
-  lineHeight: {
-    tight: 1.2,
-    normal: 1.5,
-    relaxed: 1.8,
   },
 } as const;
 
 export type TTypography = typeof typography;
+export type TFontSize = keyof typeof typography.fontSize;
+export type TFontWeight = keyof typeof typography.fontWeight;

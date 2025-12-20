@@ -1,10 +1,10 @@
 import { darkTheme, lightTheme } from '@/styles';
-import { TThemeMode, TTheme } from '@/types';
+import { Theme, TThemeMode } from '@/types';
 import { createContext, ReactNode, useState } from 'react';
 import { useColorScheme } from 'react-native';
 
 type TThemeContext = {
-  theme: TTheme;
+  theme: Theme;
   themeMode: TThemeMode;
   setThemeMode: (mode: TThemeMode) => void;
   toggleTheme: () => void;
@@ -25,7 +25,7 @@ export const ThemeProvider = ({
   const systemColorSchema = useColorScheme();
   const [themeMode, setThemeMode] = useState(initialMode);
 
-  const getCurrentTheme = (): TTheme => {
+  const getCurrentTheme = (): Theme => {
     if (themeMode === 'auto') {
       return systemColorSchema === 'dark' ? darkTheme : lightTheme;
     }
