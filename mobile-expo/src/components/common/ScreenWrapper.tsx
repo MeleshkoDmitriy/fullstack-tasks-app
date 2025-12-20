@@ -1,4 +1,3 @@
-// src/components/common/ScreenWrapper.tsx
 import { ReactNode } from 'react';
 import {
   View,

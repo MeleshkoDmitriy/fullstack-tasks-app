@@ -1,5 +1,4 @@
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import { Ionicons } from '@expo/vector-icons';
 import { CreateTaskScreen, EditTaskScreen, TasksListScreen } from '../screens';
 import { CustomHeader } from '../components';
 
