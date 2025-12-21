@@ -5,7 +5,7 @@ export const lightTheme: Theme = {
     base: {
       primary: '#6200EE',
       primaryDark: '#3700B3',
-      primaryLight: '#BB86FC',
+      primaryLight: '#ae74ff',
     },
     text: {
       primary: '#000000',

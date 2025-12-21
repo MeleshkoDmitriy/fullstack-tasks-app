@@ -22,5 +22,6 @@ const styles = StyleSheet.create({
   container: {
     padding: spacing.md,
     borderRadius: spacing.md,
+    gap: spacing.md,
   },
 });

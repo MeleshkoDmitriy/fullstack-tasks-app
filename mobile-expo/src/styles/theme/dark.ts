@@ -4,8 +4,8 @@ export const darkTheme: Theme = {
   colors: {
     base: {
       primary: '#BB86FC',
-      primaryDark: '#3700B3',
-      primaryLight: '#6200EE',
+      primaryDark: '#9845fe',
+      primaryLight: '#e1ccfc',
     },
     text: {
       primary: '#FFFFFF',

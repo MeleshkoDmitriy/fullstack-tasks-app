@@ -3,6 +3,7 @@ import type { ComponentProps } from 'react';
 import { TouchableOpacity } from 'react-native';
 
 type IoniconsName = ComponentProps<typeof Ionicons>['name'];
+
 export type TCustomHeaderButton = {
   name: IoniconsName;
   onPress?: () => void;
