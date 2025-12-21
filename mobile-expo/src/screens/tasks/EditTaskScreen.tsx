@@ -1,10 +1,9 @@
-import { Text } from 'react-native';
-import { ScreenWrapper } from '@/components';
+import { ScreenWrapper, UIText } from '@/components';
 
 export const EditTaskScreen = () => {
   return (
     <ScreenWrapper scrollable keyboardAvoiding>
-      <Text>EditTaskScreen</Text>
+      <UIText text='EditTaskScreen' />
     </ScreenWrapper>
   );
 };

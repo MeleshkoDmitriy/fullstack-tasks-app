@@ -2,6 +2,7 @@ import { darkTheme, lightTheme } from '@/styles';
 import { Theme, TThemeMode } from '@/types';
 import { createContext, ReactNode, useState } from 'react';
 import { useColorScheme } from 'react-native';
+import { StatusBar } from 'expo-status-bar';
 
 type TThemeContext = {
   theme: Theme;
@@ -36,6 +37,7 @@ export const ThemeProvider = ({
   const theme = getCurrentTheme();
 
   const isDarkTheme = theme === darkTheme;
+  const statusBarStyle = isDarkTheme ? 'light' : 'dark';
 
   const toggleTheme = () => {
     setThemeMode((prev) => {
@@ -57,6 +59,7 @@ export const ThemeProvider = ({
         isDarkTheme,
       }}
     >
+      <StatusBar style={statusBarStyle} />
       {children}
     </ThemeContext.Provider>
   );

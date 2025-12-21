@@ -1,3 +1,4 @@
+import { useTheme } from '@/hooks';
 import { ReactNode } from 'react';
 import {
   View,
@@ -28,12 +29,14 @@ export const ScreenWrapper = ({
   contentStyle,
 }: ScreenWrapperProps) => {
   const insets = useSafeAreaInsets();
+  const { theme } = useTheme();
 
   const containerStyle = [
     styles.container,
     {
       paddingTop: safeAreaTop ? insets.top : 0,
       paddingBottom: safeAreaBottom ? insets.bottom : 0,
+      backgroundColor: theme.colors.background.background,
     },
     style,
   ];

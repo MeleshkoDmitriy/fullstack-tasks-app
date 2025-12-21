@@ -1,6 +1,6 @@
-import { FlatList, Text, View } from "react-native";
-import { ScreenWrapper } from "@/components";
-import { useTasks } from "@/hooks";
+import { FlatList, Text, View } from 'react-native';
+import { ScreenWrapper, TaskCard, UIText } from '@/components';
+import { useTasks } from '@/hooks';
 
 export const TasksListScreen = () => {
   const { data: tasks, isLoading } = useTasks();
@@ -8,22 +8,18 @@ export const TasksListScreen = () => {
   if (isLoading) {
     return (
       <ScreenWrapper>
-        <Text>Loading....</Text>
+        <UIText text='Loading....' />
       </ScreenWrapper>
     );
   }
 
   return (
     <ScreenWrapper>
-      <Text>TasksListScreenTasksListScreen</Text>
+      <UIText text='TasksListScreenTasksListScreen' weight='bold' />
       <FlatList
         data={tasks}
         keyExtractor={(task) => task.id}
-        renderItem={({ item }) => (
-          <View>
-            <Text>{item.title}</Text>
-          </View>
-        )}
+        renderItem={({ item }) => <TaskCard task={item} />}
       />
     </ScreenWrapper>
   );

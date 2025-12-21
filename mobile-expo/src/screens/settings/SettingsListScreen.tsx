@@ -1,10 +1,13 @@
-import { Text } from "react-native";
-import { ScreenWrapper } from "@/components";
+import { ScreenWrapper, UISwitcher, UIText } from '@/components';
+import { useTheme } from '@/hooks';
 
 export const SettingsListScreen = () => {
+  const { isDarkTheme, toggleTheme } = useTheme();
+
   return (
     <ScreenWrapper>
-      <Text>SettingsListScreen</Text>
+      <UIText text='SettingsListScreen' />
+      <UISwitcher value={isDarkTheme} onValueChange={toggleTheme} />
     </ScreenWrapper>
   );
 };
