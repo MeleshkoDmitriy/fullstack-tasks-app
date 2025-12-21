@@ -3,7 +3,7 @@ import { ScreenWrapper, TaskCard, UIText } from '@/components';
 import { useTasks } from '@/hooks';
 
 export const TasksListScreen = () => {
-  const { data: tasks, isLoading } = useTasks();
+  const { data: tasks, isLoading, error } = useTasks();
 
   if (isLoading) {
     return (
@@ -12,6 +12,7 @@ export const TasksListScreen = () => {
       </ScreenWrapper>
     );
   }
+
 
   return (
     <ScreenWrapper>

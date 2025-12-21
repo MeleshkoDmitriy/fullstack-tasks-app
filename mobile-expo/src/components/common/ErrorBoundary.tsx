@@ -1,6 +1,5 @@
 import { Component, ReactNode } from 'react';
-import { View, StyleSheet } from 'react-native';
-import { UIButton, UIText } from './UIComponents';
+import { View, StyleSheet, Text, TouchableOpacity } from 'react-native';
 
 interface Props {
   children: ReactNode;
@@ -38,9 +37,11 @@ export class ErrorBoundary extends Component<Props, State> {
 
       return (
         <View style={styles.container}>
-          <UIText text='Something went wrong' />
-          <UIText text={this.state.error?.message || ''} />
-          <UIButton title='Try again' onPress={this.handleReset} />
+          <Text>Something went wrong</Text>
+          <Text>{this.state.error?.message}</Text>
+          <TouchableOpacity onPress={this.handleReset}>
+            <Text>Try again</Text>
+          </TouchableOpacity>
         </View>
       );
     }

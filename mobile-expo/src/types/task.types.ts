@@ -36,8 +36,8 @@ export type TTask = {
   priority: EnumTaskPriority;
   status: EnumTaskStatus;
   isBlocked: boolean;
-  createdAt: Date;
-  updateAt: Date;
+  createdAt: string;
+  updateAt: string;
 };
 
 export type TIdTask = TTask['id'];

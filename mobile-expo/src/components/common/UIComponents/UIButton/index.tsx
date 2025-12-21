@@ -44,7 +44,7 @@ export const UIButton = ({
 
   return (
     <TouchableOpacity
-      style={[styles.button, styles.disabled, buttonStyles]}
+      style={[styles.button, (isDisabled && styles.disabled), buttonStyles]}
       onPress={onPress}
       disabled={isLoading || isDisabled}
       activeOpacity={0.7}
